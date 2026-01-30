@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace nlptk::preprocess {
+namespace LexiCore::preprocess {
 
     // Preprocess multiple documents (each document is a list of lines).
     std::vector<std::vector<std::string>>

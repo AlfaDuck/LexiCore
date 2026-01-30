@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <unordered_map>
 
-namespace nlptk::vectorize {
+namespace LexiCore::vectorize {
 
     std::vector<std::vector<std::pair<std::string, int>>> word_count(
         const std::vector<std::vector<std::string>>& files_words,

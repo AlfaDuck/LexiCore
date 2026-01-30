@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-namespace nlptk::vectorize {
+namespace LexiCore::vectorize {
 
     // Bag-of-Words counts for multiple documents.
     // If n is set, keeps only top-n tokens per document by frequency (descending).

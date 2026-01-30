@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace nlptk::io {
+namespace LexiCore::io {
 
     // Reads multiple text files and returns lines for each file.
     std::vector<std::vector<std::string>>

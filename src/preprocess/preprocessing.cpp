@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-namespace nlptk::preprocess {
+namespace LexiCore::preprocess {
 
 namespace {
 

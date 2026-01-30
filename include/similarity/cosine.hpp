@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-namespace nlptk::similarity {
+namespace LexiCore::similarity {
 
     float cosine_similarity(
         const std::vector<std::pair<std::string, int>>& a,

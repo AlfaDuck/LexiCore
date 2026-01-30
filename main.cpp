@@ -16,14 +16,14 @@ namespace {
         std::cout << "Enter a sentence to find similarity of it to other files: ";
         std::getline(std::cin, input);
 
-        auto input_words = nlptk::preprocess::preprocess(input);
-        auto input_words_count = nlptk::vectorize::word_count(input_words);
+        auto input_words = LexiCore::preprocess::preprocess(input);
+        auto input_words_count = LexiCore::vectorize::word_count(input_words);
 
         float best_similarity = 0.0f;
         int best_index = -1;
 
         for (int i = 0; i < static_cast<int>(files_words.size()); i++) {
-            float s = nlptk::similarity::cosine_similarity(files_words[i], input_words_count);
+            float s = LexiCore::similarity::cosine_similarity(files_words[i], input_words_count);
             if (s > best_similarity) {
                 best_similarity = s;
                 best_index = i;
@@ -46,13 +46,13 @@ int main() {
             base + "data/3.txt"
     };
 
-    auto results = nlptk::io::read_files(paths);
-    auto words = nlptk::preprocess::preprocess(results);
-    auto files_words = nlptk::vectorize::word_count(words);
+    auto results = LexiCore::io::read_files(paths);
+    auto words = LexiCore::preprocess::preprocess(results);
+    auto files_words = LexiCore::vectorize::word_count(words);
 
     for (int i = 0; i < static_cast<int>(files_words.size()); i++) {
         for (int j = i + 1; j < static_cast<int>(files_words.size()); j++) {
-            float s = nlptk::similarity::cosine_similarity(files_words[i], files_words[j]);
+            float s = LexiCore::similarity::cosine_similarity(files_words[i], files_words[j]);
             std::cout << "similarity between " << paths[i] << " and " << paths[j]
                       << " = " << s << "\n";
         }

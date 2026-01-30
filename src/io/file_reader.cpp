@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace nlptk::io {
+namespace LexiCore::io {
 
     std::vector<std::vector<std::string>>
     read_files(const std::vector<std::string>& paths) {

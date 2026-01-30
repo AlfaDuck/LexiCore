@@ -3,7 +3,7 @@
 #include <cmath>
 #include <unordered_map>
 
-namespace nlptk::similarity {
+namespace LexiCore::similarity {
 
     float cosine_similarity(const std::vector<std::pair<std::string, int>>& a,
                             const std::vector<std::pair<std::string, int>>& b) {
