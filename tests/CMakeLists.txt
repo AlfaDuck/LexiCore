@@ -1,0 +1,12 @@
+function(add_lexicore_test test_name)
+    add_executable(${test_name} ${ARGN})
+    target_link_libraries(${test_name} PRIVATE lexicore)
+    add_test(NAME ${test_name} COMMAND ${test_name})
+endfunction()
+
+add_lexicore_test(test_file_reader io/test_file_reader.cpp)
+add_lexicore_test(test_preprocess  preprocess/test_preprocess.cpp)
+add_lexicore_test(test_tfidf       vectorize/test_tfidf.cpp)
+add_lexicore_test(test_bow         vectorize/test_bow.cpp)
+add_lexicore_test(test_cosine      similarity/test_cosine.cpp)
+add_lexicore_test(test_search      search/test_similarity_search.cpp)
