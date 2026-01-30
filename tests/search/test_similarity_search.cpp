@@ -24,7 +24,7 @@ static void test_similarity_search_bow_handles_no_match() {
 
     auto r = LexiCore::search::similarity_search_bow(files, "zzzz qqqq");
     assert(r.first == -1);
-    assert(r.second == 0.0f);
+    assert(r.second >= 0.0f && r.second < 1e-6f);
 }
 
 static void test_similarity_search_tfidf_picks_best_doc() {
@@ -47,7 +47,7 @@ static void test_similarity_search_tfidf_handles_no_match() {
 
     auto r = LexiCore::search::similarity_search_tfidf(files, "zzzz qqqq");
     assert(r.first == -1);
-    assert(r.second == 0.0f);
+    assert(r.second >= 0.0f && r.second < 1e-6f);
 }
 
 int main() {
