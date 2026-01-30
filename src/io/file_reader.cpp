@@ -31,4 +31,4 @@ namespace LexiCore::io {
         return all_lines;
     }
 
-} // namespace nlptk::io
+}
