@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/NLPTK.iml" filepath="$PROJECT_DIR$/.idea/NLPTK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/LexiCore.iml" filepath="$PROJECT_DIR$/.idea/LexiCore.iml" />
     </modules>
   </component>
 </project>
