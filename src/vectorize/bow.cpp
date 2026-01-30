@@ -5,7 +5,7 @@
 
 namespace LexiCore::vectorize {
 
-    std::vector<std::vector<std::pair<std::string, int>>> word_count(
+    std::vector<std::vector<std::pair<std::string, int>>> bag_of_word(
         const std::vector<std::vector<std::string>>& files_words,
         std::optional<int> n
     ) {
@@ -34,7 +34,7 @@ namespace LexiCore::vectorize {
         return file_items;
     }
 
-    std::vector<std::pair<std::string, int>> word_count(const std::vector<std::string>& words) {
+    std::vector<std::pair<std::string, int>> bag_of_word(const std::vector<std::string>& words) {
         std::unordered_map<std::string, int> counts;
         for (const auto& w : words) counts[w]++;
 

@@ -17,7 +17,7 @@ namespace {
         std::getline(std::cin, input);
 
         auto input_words = LexiCore::preprocess::preprocess(input);
-        auto input_words_count = LexiCore::vectorize::word_count(input_words);
+        auto input_words_count = LexiCore::vectorize::bag_of_word(input_words);
 
         float best_similarity = 0.0f;
         int best_index = -1;
@@ -48,7 +48,7 @@ int main() {
 
     auto results = LexiCore::io::read_files(paths);
     auto words = LexiCore::preprocess::preprocess(results);
-    auto files_words = LexiCore::vectorize::word_count(words);
+    auto files_words = LexiCore::vectorize::bag_of_word(words);
 
     for (int i = 0; i < static_cast<int>(files_words.size()); i++) {
         for (int j = i + 1; j < static_cast<int>(files_words.size()); j++) {
