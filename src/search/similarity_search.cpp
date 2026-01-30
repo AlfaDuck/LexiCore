@@ -46,4 +46,18 @@ namespace LexiCore::search
 
         return {best_index, best_similarity};
     }
+
+    std::pair<int, float> similarity_search_bow_raw(const std::vector<std::vector<std::string>>& raw_files_lines,
+        const std::string& input)
+    {
+        auto tokenized = LexiCore::preprocess::preprocess(raw_files_lines);
+        return similarity_search_bow(tokenized, input);
+    }
+
+    std::pair<int, float> similarity_search_tfidf_raw(const std::vector<std::vector<std::string>>& raw_files_lines,
+        const std::string& input)
+    {
+        auto tokenized = LexiCore::preprocess::preprocess(raw_files_lines);
+        return similarity_search_tfidf(tokenized, input);
+    }
 }
