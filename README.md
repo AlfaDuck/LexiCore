@@ -55,12 +55,11 @@ in mind.
 ```text
 LexiCore/
 ├── include/
-│   └── LexiCore/
-│       ├── io/
-│       ├── preprocess/
-│       ├── vectorize/
-│       ├── similarity/
-│       └── search/
+│   ├── io/
+│   ├── preprocess/
+│   ├── vectorize/
+│   ├── similarity/
+│   └── search/
 ├── src/
 │   ├── io/
 │   ├── preprocess/

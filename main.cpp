@@ -18,7 +18,9 @@ int main(int argc, char** argv) {
 
     std::vector<std::string> paths;
     paths.reserve(argc - 1);
-    for (int i = 1; i < argc; ++i) paths.emplace_back(argv[i]);
+    for (int i = 1; i < argc; ++i) {
+        paths.emplace_back(argv[i]);
+    }
 
     auto files = LexiCore::io::read_files(paths);
     if (files.empty()) {
@@ -26,11 +28,14 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    // -------- preprocess once --------
     auto tokens = LexiCore::preprocess::preprocess(files);
 
+    // -------- vectorize once --------
     auto bows   = LexiCore::vectorize::bag_of_word(tokens);
     auto tfidfs = LexiCore::vectorize::tf_idf(tokens);
 
+    // -------- pairwise similarity (BoW) --------
     std::cout << "Pairwise cosine similarity (BoW):\n";
     for (size_t i = 0; i < bows.size(); ++i) {
         for (size_t j = i + 1; j < bows.size(); ++j) {
@@ -39,6 +44,7 @@ int main(int argc, char** argv) {
         }
     }
 
+    // -------- pairwise similarity (TF-IDF) --------
     std::cout << "\nPairwise cosine similarity (TF-IDF):\n";
     for (size_t i = 0; i < tfidfs.size(); ++i) {
         for (size_t j = i + 1; j < tfidfs.size(); ++j) {
@@ -47,16 +53,22 @@ int main(int argc, char** argv) {
         }
     }
 
+    // -------- interactive query --------
     std::cout << "\nEnter a query sentence (empty to exit):\n> ";
     std::string query;
     std::getline(std::cin, query);
 
     if (!query.empty()) {
+        // preprocess + vectorize query once
+        auto q_tokens = LexiCore::preprocess::preprocess(query);
+        auto q_bow    = LexiCore::vectorize::bag_of_word(q_tokens);
+        auto q_tfidf  = LexiCore::vectorize::tf_idf(q_tokens);
+
         auto [idx_bow, score_bow] =
-            LexiCore::search::similarity_search_bow(tokens, query);
+            LexiCore::search::similarity_search_bow_vec(bows, q_bow);
 
         auto [idx_tfidf, score_tfidf] =
-            LexiCore::search::similarity_search_tfidf(tokens, query);
+            LexiCore::search::similarity_search_tfidf_vec(tfidfs, q_tfidf);
 
         std::cout << "\nResults:\n";
 
