@@ -16,11 +16,10 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    // -------- read paths --------
     std::vector<std::string> paths;
-    paths.reserve(argc - 1);
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i)
         paths.emplace_back(argv[i]);
-    }
 
     auto files = LexiCore::io::read_files(paths);
     if (files.empty()) {
@@ -28,12 +27,16 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    // -------- preprocess once --------
+    // -------- preprocess corpus --------
     auto tokens = LexiCore::preprocess::preprocess(files);
 
-    // -------- vectorize once --------
-    auto bows   = LexiCore::vectorize::bag_of_word(tokens);
-    auto tfidfs = LexiCore::vectorize::tf_idf(tokens);
+    // -------- BoW baseline --------
+    auto bows = LexiCore::vectorize::bag_of_word(tokens);
+
+    // -------- TF-IDF (NEW: class-based) --------
+    LexiCore::vectorize::TF_IDF tfidf;
+    tfidf.fit(tokens);
+    auto tfidfs = tfidf.transform(tokens);
 
     // -------- pairwise similarity (BoW) --------
     std::cout << "Pairwise cosine similarity (BoW):\n";
@@ -59,10 +62,14 @@ int main(int argc, char** argv) {
     std::getline(std::cin, query);
 
     if (!query.empty()) {
-        // preprocess + vectorize query once
+        // preprocess query
         auto q_tokens = LexiCore::preprocess::preprocess(query);
-        auto q_bow    = LexiCore::vectorize::bag_of_word(q_tokens);
-        auto q_tfidf  = LexiCore::vectorize::tf_idf(q_tokens);
+
+        // BoW query
+        auto q_bow = LexiCore::vectorize::bag_of_word(q_tokens);
+
+        // TF-IDF query (IMPORTANT: use same model!)
+        auto q_tfidf = tfidf.transform(q_tokens);
 
         auto [idx_bow, score_bow] =
             LexiCore::search::similarity_search_bow_vec(bows, q_bow);
@@ -74,7 +81,8 @@ int main(int argc, char** argv) {
 
         std::cout << "BoW   -> ";
         if (idx_bow >= 0) {
-            std::cout << "best file[" << idx_bow << "] = " << paths[idx_bow]
+            std::cout << "best file[" << idx_bow << "] = "
+                      << paths[idx_bow]
                       << " | score = " << score_bow << "\n";
         } else {
             std::cout << "no match | score = " << score_bow << "\n";
@@ -82,7 +90,8 @@ int main(int argc, char** argv) {
 
         std::cout << "TF-IDF -> ";
         if (idx_tfidf >= 0) {
-            std::cout << "best file[" << idx_tfidf << "] = " << paths[idx_tfidf]
+            std::cout << "best file[" << idx_tfidf << "] = "
+                      << paths[idx_tfidf]
                       << " | score = " << score_tfidf << "\n";
         } else {
             std::cout << "no match | score = " << score_tfidf << "\n";

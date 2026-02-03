@@ -7,7 +7,6 @@
 #include "vectorize/TF-IDF.hpp"
 #include "search/similarity_search.hpp"
 
-
 static void test_similarity_search_bow_vec_picks_best_doc() {
     std::vector<std::vector<std::string>> tokens = {
         {"apple", "apple", "banana", "orange", "fruit", "common"},
@@ -41,7 +40,6 @@ static void test_similarity_search_bow_vec_handles_no_match() {
     assert(r.second >= 0.0f && r.second < 1e-6f);
 }
 
-
 static void test_similarity_search_tfidf_vec_picks_best_doc() {
     std::vector<std::vector<std::string>> tokens = {
         {"apple", "apple", "banana", "orange", "fruit", "common"},
@@ -49,10 +47,13 @@ static void test_similarity_search_tfidf_vec_picks_best_doc() {
         {"apple", "car", "mixed", "common"}
     };
 
-    auto tfidfs = LexiCore::vectorize::tf_idf(tokens);
+    // Build TF-IDF vectors using ONE fitted model
+    LexiCore::vectorize::TF_IDF model;
+    model.fit(tokens);
+    auto tfidfs = model.transform(tokens);
 
     std::vector<std::string> q_tokens = {"apple", "banana", "fruit"};
-    auto q_tfidf = LexiCore::vectorize::tf_idf(q_tokens);
+    auto q_tfidf = model.transform(q_tokens);
 
     auto r = LexiCore::search::similarity_search_tfidf_vec(tfidfs, q_tfidf);
     assert(r.first == 0);
@@ -65,12 +66,17 @@ static void test_similarity_search_tfidf_vec_handles_no_match() {
         {"car", "bus", "train", "vehicle", "common"}
     };
 
-    auto tfidfs = LexiCore::vectorize::tf_idf(tokens);
+    LexiCore::vectorize::TF_IDF model;
+    model.fit(tokens);
+    auto tfidfs = model.transform(tokens);
 
+    // Query is only OOV terms -> after transform it becomes empty vector
     std::vector<std::string> q_tokens = {"zzzz", "qqqq"};
-    auto q_tfidf = LexiCore::vectorize::tf_idf(q_tokens);
+    auto q_tfidf = model.transform(q_tokens);
 
     auto r = LexiCore::search::similarity_search_tfidf_vec(tfidfs, q_tfidf);
+
+    // With an empty query vector, cosine similarity should be 0 for all docs
     assert(r.first == -1);
     assert(r.second >= 0.0f && r.second < 1e-6f);
 }
