@@ -1,16 +1,32 @@
 #pragma once
 
-#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
+#include <unordered_map>
 
 namespace LexiCore::vectorize {
 
-    std::vector<std::vector<std::pair<std::string, float>>> tf_idf(
-        const std::vector<std::vector<std::string>>& files_words);
+    class TF_IDF {
+        std::unordered_map<std::string, float> idf;
+        std::unordered_map<std::string, int> df;
+        int N = -1;
 
-    std::vector<std::pair<std::string, float>> tf_idf(
-        const std::vector<std::string>& files_words);
+    public:
+        void fit(const std::vector<std::vector<std::string>>& files_words);
+        void fit(const std::vector<std::string>& files_words);
+
+        std::vector<std::vector<std::pair<std::string, float>>> transform(
+            const std::vector<std::vector<std::string>>& files_words) const;
+        std::vector<std::pair<std::string, float>> transform(
+            const std::vector<std::string>& files_words) const;
+
+        std::vector<std::vector<std::pair<std::string, float>>> fit_transform(
+            const std::vector<std::vector<std::string>>& files_words);
+        std::vector<std::pair<std::string, float>> fit_transform(
+            const std::vector<std::string>& files_words);
+
+        void reset();
+    };
 
 }
