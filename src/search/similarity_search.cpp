@@ -34,8 +34,12 @@ std::pair<int, float> similarity_search_tfidf(
     const std::string& input) {
 
     auto input_tokens = LexiCore::preprocess::preprocess(input);
-    auto input_vec    = LexiCore::vectorize::tf_idf(input_tokens);
-    auto files_vecs   = LexiCore::vectorize::tf_idf(tokenized_files);
+
+    LexiCore::vectorize::TF_IDF model;
+    model.fit(tokenized_files);
+
+    auto files_vecs = model.transform(tokenized_files);
+    auto input_vec  = model.transform(input_tokens);
 
     float best_score = 0.0f;
     int best_index   = -1;
