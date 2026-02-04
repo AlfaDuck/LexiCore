@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     auto tokens = LexiCore::preprocess::preprocess(files);
 
     // -------- BoW baseline --------
-    auto bows = LexiCore::vectorize::bag_of_word(tokens);
+    auto bows = LexiCore::vectorize::BagOfWords::fit_transform(tokens);
 
     // -------- TF-IDF (NEW: class-based) --------
     LexiCore::vectorize::TF_IDF tfidf;
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
         auto q_tokens = LexiCore::preprocess::preprocess(query);
 
         // BoW query
-        auto q_bow = LexiCore::vectorize::bag_of_word(q_tokens);
+        auto q_bow = LexiCore::vectorize::BagOfWords::fit_transform(q_tokens);
 
         // TF-IDF query (IMPORTANT: use same model!)
         auto q_tfidf = tfidf.transform(q_tokens);

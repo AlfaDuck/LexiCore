@@ -14,10 +14,10 @@ static void test_similarity_search_bow_vec_picks_best_doc() {
         {"apple", "car", "mixed", "common"}
     };
 
-    auto bows = LexiCore::vectorize::bag_of_word(tokens);
+    auto bows = LexiCore::vectorize::BagOfWords::fit_transform(tokens);
 
     std::vector<std::string> q_tokens = {"apple", "banana", "fruit"};
-    auto q_bow = LexiCore::vectorize::bag_of_word(q_tokens);
+    auto q_bow = LexiCore::vectorize::BagOfWords::fit_transform(q_tokens);
 
     auto r = LexiCore::search::similarity_search_bow_vec(bows, q_bow);
     assert(r.first == 0);
@@ -30,10 +30,10 @@ static void test_similarity_search_bow_vec_handles_no_match() {
         {"car", "bus", "train", "vehicle", "common"}
     };
 
-    auto bows = LexiCore::vectorize::bag_of_word(tokens);
+    auto bows = LexiCore::vectorize::BagOfWords::fit_transform(tokens);
 
     std::vector<std::string> q_tokens = {"zzzz", "qqqq"};
-    auto q_bow = LexiCore::vectorize::bag_of_word(q_tokens);
+    auto q_bow = LexiCore::vectorize::BagOfWords::fit_transform(q_tokens);
 
     auto r = LexiCore::search::similarity_search_bow_vec(bows, q_bow);
     assert(r.first == -1);

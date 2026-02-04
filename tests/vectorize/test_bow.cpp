@@ -17,7 +17,7 @@ static void test_bow_single_document_counts() {
         "apple", "banana", "apple", "orange", "banana", "apple"
     };
 
-    auto bow = LexiCore::vectorize::bag_of_word(words);
+    auto bow = LexiCore::vectorize::BagOfWords::fit_transform(words);
     auto m = to_map(bow);
 
     assert(m["apple"] == 3);
@@ -31,7 +31,7 @@ static void test_bow_multiple_documents() {
         {"car", "bus", "car", "train"}
     };
 
-    auto bows = LexiCore::vectorize::bag_of_word(docs);
+    auto bows = LexiCore::vectorize::BagOfWords::fit_transform(docs);
 
     assert(bows.size() == 2);
 
@@ -51,7 +51,7 @@ static void test_bow_top_n() {
         {"a", "b", "a", "c", "a", "b"}
     };
 
-    auto bows = LexiCore::vectorize::bag_of_word(docs, 1);
+    auto bows = LexiCore::vectorize::BagOfWords::fit_transform(docs, 1);
 
     assert(bows.size() == 1);
     assert(bows[0].size() == 1);
