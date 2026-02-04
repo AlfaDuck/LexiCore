@@ -5,10 +5,12 @@ It focuses on building a clean, testable, and extensible text-processing pipelin
 
 The project is designed with:
 
-* Clean architecture
-* Strong separation of concerns
-* Full unit-test coverage
-* Future readiness for GPU / CUDA acceleration
+- Clean architecture
+- Strong separation of concerns
+- Explicit state management
+- Full unit-test coverage
+- Future readiness for GPU / CUDA acceleration
+- Planned Python bindings
 
 in mind.
 
@@ -17,36 +19,40 @@ in mind.
 ## ✨ Features
 
 ### Text Preprocessing
-
-* Tokenization
-* Lowercasing
-* Stopwords removal
-* Token length filtering
+- Tokenization
+- Lowercasing
+- Stopword removal
+- Token length filtering
 
 ### Vectorization
 
-* Bag-of-Words (BoW)
-* TF-IDF
+#### Bag-of-Words (BoW)
+- Stateless utility API
+- Optional top-N term selection
+- Deterministic output ordering
 
-    * Log-scaled Term Frequency
-    * Smoothed Inverse Document Frequency
-    * L2 normalization
+#### TF-IDF
+- Stateful, class-based design
+- Log-scaled Term Frequency
+- Smoothed Inverse Document Frequency
+- L2 normalization
+- Explicit `fit / transform` pipeline
+- Proper handling of out-of-vocabulary (OOV) terms
 
 ### Similarity
-
-* Cosine similarity for sparse vectors
+- Cosine similarity for sparse vectors
 
 ### Search
-
-* Similarity search using Bag-of-Words
-* Similarity search using TF-IDF vectors
+- Similarity search using Bag-of-Words vectors
+- Similarity search using TF-IDF vectors
+- Clear separation between vectorization and search logic
 
 ### Engineering
-
-* Modern C++ (C++20)
-* Namespace-based modular design
-* Clean and scalable CMake setup
-* Unit tests for all core modules
+- Modern C++ (C++20)
+- Namespace-based modular design
+- Header / implementation separation
+- Clean and scalable CMake setup
+- Full unit test coverage for all core modules
 
 ---
 
@@ -58,12 +64,16 @@ LexiCore/
 │   ├── io/
 │   ├── preprocess/
 │   ├── vectorize/
+│   │   ├── bow.hpp
+│   │   └── TF-IDF.hpp
 │   ├── similarity/
 │   └── search/
 ├── src/
 │   ├── io/
 │   ├── preprocess/
 │   ├── vectorize/
+│   │   ├── bow.cpp
+│   │   └── TF-IDF.cpp
 │   ├── similarity/
 │   └── search/
 ├── tests/
@@ -75,7 +85,7 @@ LexiCore/
 ├── main.cpp
 ├── CMakeLists.txt
 └── README.md
-```
+````
 
 ---
 
@@ -92,7 +102,7 @@ LexiCore/
 ### Build
 
 ```bash
-git clone https://github.com/your-username/LexiCore.git
+git clone https://github.com/AlfaDuck/LexiCore.git
 cd LexiCore
 
 cmake -S . -B build
@@ -111,21 +121,8 @@ cmake --build build
 
 ### Run tests
 
-Run all tests at once:
-
 ```bash
-ctest --test-dir build
-```
-
-Run individual test executables:
-
-```bash
-./build/test_file_reader
-./build/test_preprocess
-./build/test_bow
-./build/test_tfidf
-./build/test_cosine
-./build/test_search
+ctest --test-dir build --output-on-failure
 ```
 
 ---
@@ -137,7 +134,7 @@ LexiCore follows a strict testing-first mindset.
 * Each core module is tested independently
 * Tests are deterministic and isolated
 * No hidden global state
-* Designed to support both unit and end-to-end tests
+* Explicit validation of edge cases (OOV, empty inputs, normalization)
 
 This ensures correctness, maintainability, and confidence during refactoring.
 
@@ -158,38 +155,52 @@ auto tokens = LexiCore::preprocess::preprocess(
 ### Bag-of-Words
 
 ```cpp
-auto bow = LexiCore::vectorize::bag_of_word(tokens);
+using LexiCore::vectorize::BagOfWords;
+
+auto bows = BagOfWords::fit_transform(tokens);
+auto top_bows = BagOfWords::fit_transform(tokens, 10);
 ```
 
 ---
 
-### TF-IDF
+### TF-IDF (Class-based API)
 
 ```cpp
-auto tfidf = LexiCore::vectorize::tf_idf(tokens);
+using LexiCore::vectorize::TF_IDF;
+
+TF_IDF model;
+
+// Fit on corpus
+model.fit(documents_tokens);
+
+// Transform corpus
+auto tfidf_vectors = model.transform(documents_tokens);
+
+// Transform query using the same model
+auto query_vec = model.transform(query_tokens);
 ```
 
 ---
 
-### Similarity Search (BoW)
+### Similarity Search (BoW vectors)
 
 ```cpp
 auto [index, score] =
-    LexiCore::search::similarity_search_bow(
-        documents,
-        "apple banana fruit"
+    LexiCore::search::similarity_search_bow_vec(
+        bow_vectors,
+        query_bow
     );
 ```
 
 ---
 
-### Similarity Search (TF-IDF)
+### Similarity Search (TF-IDF vectors)
 
 ```cpp
 auto [index, score] =
-    LexiCore::search::similarity_search_tfidf(
-        documents,
-        "apple banana fruit"
+    LexiCore::search::similarity_search_tfidf_vec(
+        tfidf_vectors,
+        query_tfidf
     );
 ```
 
@@ -199,9 +210,10 @@ auto [index, score] =
 
 * CUDA-accelerated vectorization
 * GPU-based similarity search
-* Vocabulary persistence
 * Incremental indexing
-* Python bindings
+* Vocabulary persistence
+* Python bindings (via pybind11)
+* Prebuilt Python wheels
 
 ---
 
