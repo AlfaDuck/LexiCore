@@ -9,7 +9,7 @@ namespace LexiCore::vectorize {
         if (N != -1) return;
 
         N = files_words.size();
-        auto bow_files = bag_of_word(files_words);
+        auto bow_files = BagOfWords::fit_transform(files_words);
 
         for (const auto& pairs : bow_files)
             for (const auto& pair : pairs) df[pair.first] = df[pair.first] + 1;
@@ -22,7 +22,7 @@ namespace LexiCore::vectorize {
         if (N != -1) return;
 
         N = 1;
-        auto bow_file = bag_of_word(files_word);
+        auto bow_file = BagOfWords::fit_transform(files_word);
 
         for (const auto& pair : bow_file)
             df[pair.first] = df[pair.first] + 1;
@@ -37,7 +37,7 @@ namespace LexiCore::vectorize {
         std::vector<std::vector<std::pair<std::string, float>>> tfidf;
         if (N == -1) return tfidf;
 
-        auto bow = bag_of_word(files_words);
+        auto bow = BagOfWords::fit_transform(files_words);
 
         std::vector<std::vector<std::pair<std::string, float>>> tf;
         for (const auto& pairs : bow) {
@@ -92,7 +92,7 @@ namespace LexiCore::vectorize {
         std::vector<std::pair<std::string, float>> tfidf;
         if (N == -1) return tfidf;
 
-        auto bow = bag_of_word(files_words);
+        auto bow = BagOfWords::fit_transform(files_words);
 
         std::vector<std::pair<std::string, float>> tf;
         tf.reserve(bow.size());

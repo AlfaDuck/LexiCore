@@ -12,8 +12,8 @@ std::pair<int, float> similarity_search_bow(
     const std::string& input) {
 
     auto input_tokens = LexiCore::preprocess::preprocess(input);
-    auto input_vec    = LexiCore::vectorize::bag_of_word(input_tokens);
-    auto files_vecs   = LexiCore::vectorize::bag_of_word(tokenized_files);
+    auto input_vec    = LexiCore::vectorize::BagOfWords::fit_transform(input_tokens);
+    auto files_vecs   = LexiCore::vectorize::BagOfWords::fit_transform(tokenized_files);
 
     float best_score = 0.0f;
     int best_index   = -1;
