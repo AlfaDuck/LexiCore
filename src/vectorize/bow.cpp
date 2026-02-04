@@ -5,10 +5,10 @@
 
 namespace LexiCore::vectorize {
 
-    std::vector<std::vector<std::pair<std::string, int>>> bag_of_word(
+    std::vector<std::vector<std::pair<std::string, int>>> BagOfWords::fit_transform(
         const std::vector<std::vector<std::string>>& files_words,
-        std::optional<int> n
-    ) {
+        std::optional<int> top_n) {
+
         std::vector<std::vector<std::pair<std::string, int>>> file_items;
         file_items.reserve(files_words.size());
 
@@ -23,8 +23,8 @@ namespace LexiCore::vectorize {
             std::sort(items.begin(), items.end(),
                       [](const auto& a, const auto& b) { return a.second > b.second; });
 
-            if (n.has_value()) {
-                int limit = *n;
+            if (top_n.has_value()) {
+                int limit = *top_n;
                 if (limit > 0 && limit < static_cast<int>(items.size())) items.resize(limit);
             }
 
@@ -34,7 +34,10 @@ namespace LexiCore::vectorize {
         return file_items;
     }
 
-    std::vector<std::pair<std::string, int>> bag_of_word(const std::vector<std::string>& words) {
+    std::vector<std::pair<std::string, int>> BagOfWords::fit_transform(
+        const std::vector<std::string>& words,
+        std::optional<int> top_n) {
+
         std::unordered_map<std::string, int> counts;
         for (const auto& w : words) counts[w]++;
 
@@ -44,6 +47,11 @@ namespace LexiCore::vectorize {
 
         std::sort(items.begin(), items.end(),
                   [](const auto& a, const auto& b) { return a.second > b.second; });
+
+        if (top_n.has_value()) {
+            int limit = *top_n;
+            if (limit > 0 && limit < static_cast<int>(items.size())) items.resize(limit);
+        }
 
         return items;
     }
